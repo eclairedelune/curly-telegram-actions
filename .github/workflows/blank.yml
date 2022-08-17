@@ -1,0 +1,37 @@
+
+name: Docker
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+  workflow_dispatch:
+
+
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+
+jobs:
+  docker_build:
+    name: snap-build-arm
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        architecture:
+        - linux/amd64
+        - linux/arm64
+        - linux/arm/v7
+    container:
+      image: diddledan/snapcraft:core20
+      volumes:
+      - /sys
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      options: --privileged --platform ${{ matrix.architecture }}
+    steps:
+    - name: hello
+      run: |
+        echo "hello"
