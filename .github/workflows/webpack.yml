@@ -1,0 +1,8 @@
+name: 'Webpack Build'
+on:
+  push:
+    branches:
+      - staging
+      - production
+    paths:
+      - '*config/environments/*'
